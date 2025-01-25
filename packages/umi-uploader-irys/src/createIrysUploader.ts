@@ -1,11 +1,9 @@
 import type { BaseWebIrys } from '@irys/web-upload/dist/types/base';
-import type { BaseNodeIrys } from '@irys/upload/dist/types/base';
 import {
   Commitment,
   Context,
   GenericFile,
   GenericFileTag,
-  Keypair,
   Signer,
   SolAmount,
   UploaderInterface,
@@ -13,7 +11,6 @@ import {
   base58,
   createGenericFileFromJson,
   createSignerFromKeypair,
-  isKeypairSigner,
   lamports,
   publicKey,
   signTransaction,
@@ -67,7 +64,7 @@ function _removeDoubleDefault<T>(pkg: T): T {
 }
 
 export type IrysUploader = UploaderInterface & {
-  irys: () => Promise<BaseNodeIrys | BaseWebIrys>;
+  irys: () => Promise<BaseWebIrys>;
   getUploadPriceFromBytes: (bytes: number) => Promise<SolAmount>;
   getBalance: () => Promise<SolAmount>;
   fund: (amount: SolAmount, skipBalanceCheck: boolean) => Promise<void>;
@@ -113,7 +110,7 @@ export function createIrysUploader(
   uploaderOptions: IrysUploaderOptions = {}
 ): IrysUploader {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  let _irys: BaseNodeIrys | BaseWebIrys | null = null;
+  let _irys: BaseWebIrys | null = null;
   uploaderOptions = {
     providerUrl: context.rpc.getEndpoint(),
     ...uploaderOptions,
@@ -248,7 +245,7 @@ export function createIrysUploader(
     }
   };
 
-  const getIrys = async (): Promise<BaseWebIrys | BaseNodeIrys> => {
+  const getIrys = async (): Promise<BaseWebIrys> => {
     const oldPayer = _irys?.getSigner().publicKey;
     const newPayer = uploaderOptions.payer ?? context.payer;
     if (
@@ -265,7 +262,7 @@ export function createIrysUploader(
     return _irys;
   };
 
-  const initIrys = async (): Promise<BaseWebIrys | BaseNodeIrys> => {
+  const initIrys = async (): Promise<BaseWebIrys> => {
     const token = 'solana';
     const defaultAddress =
       context.rpc.getCluster() === 'devnet'
@@ -279,17 +276,7 @@ export function createIrysUploader(
 
     const payer: Signer = uploaderOptions.payer ?? context.payer;
 
-    // If in node use node irys, else use web irys.
-    const isNode =
-      // eslint-disable-next-line no-prototype-builtins
-      typeof window === 'undefined' || window.process?.hasOwnProperty('type');
-
-    let irys;
-    if (isNode && isKeypairSigner(payer))
-      irys = await initNodeIrys(address, payer, irysOptions);
-    else {
-      irys = await initWebIrys(address, payer, irysOptions);
-    }
+    const irys = await initWebIrys(address, payer, irysOptions);
 
     try {
       // Check for valid irys node.
@@ -299,21 +286,6 @@ export function createIrysUploader(
     }
 
     return irys;
-  };
-
-  const initNodeIrys = async (
-    address: string,
-    keypair: Keypair,
-    options: any
-  ): Promise<BaseNodeIrys> => {
-    const bPackage = _removeDoubleDefault(await import('@irys/upload'));
-    const cPackage = _removeDoubleDefault(await import('@irys/upload-solana'));
-    return bPackage
-      .Uploader(cPackage.Solana)
-      .bundlerUrl(address)
-      .withWallet(keypair.secretKey)
-      .withIrysConfig(options)
-      .build();
   };
 
   const initWebIrys = async (

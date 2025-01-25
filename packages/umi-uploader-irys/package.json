@@ -30,22 +30,22 @@
   "dependencies": {
     "@irys/web-upload": "^0.0.14",
     "@irys/web-upload-solana": "^0.1.7",
-    "@metaplex-foundation/umi-web3js-adapters": "workspace:^",
+    "@metaplex-foundation/umi-web3js-adapters": "^1.0.0",
     "@supercharge/promise-pool": "^3.2.0",
     "bignumber.js": "^9.1.2",
     "buffer": "^6.0.3"
   },
   "peerDependencies": {
-    "@metaplex-foundation/umi": "workspace:^",
+    "@metaplex-foundation/umi": "^1.0.0",
     "@solana/web3.js": "^1.72.0"
   },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
-    "@metaplex-foundation/umi": "workspace:^",
-    "@metaplex-foundation/umi-downloader-http": "workspace:^",
-    "@metaplex-foundation/umi-eddsa-web3js": "workspace:^",
-    "@metaplex-foundation/umi-http-fetch": "workspace:^",
-    "@metaplex-foundation/umi-rpc-web3js": "workspace:^",
+    "@metaplex-foundation/umi": "^1.0.0",
+    "@metaplex-foundation/umi-downloader-http": "^1.0.0",
+    "@metaplex-foundation/umi-eddsa-web3js": "^1.0.0",
+    "@metaplex-foundation/umi-http-fetch": "^1.0.0",
+    "@metaplex-foundation/umi-rpc-web3js": "^1.0.0",
     "@solana/web3.js": "^1.72.0",
     "ava": "^5.1.0"
   },
