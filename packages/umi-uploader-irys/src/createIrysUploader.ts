@@ -32,7 +32,6 @@ import {
 } from '@solana/web3.js';
 import BigNumber from 'bignumber.js';
 import { Buffer } from 'buffer';
-import PromisePool from '@supercharge/promise-pool';
 import {
   AssetUploadFailedError,
   IrysWithdrawError,
@@ -144,31 +143,34 @@ export function createIrysUploader(
     await fund(amount);
 
     const manifestMap = options?.manifest === true ? new Map() : undefined;
+    const total = files.length;
+    let processed = 0;
 
-    const result = await PromisePool.for(files)
-      .withConcurrency(uploaderOptions.uploadConcurrency ?? 10)
-      .onTaskFinished((_, pool) =>
-        options?.onProgress?.(pool.processedPercentage())
-      )
-      .process(async (file) => {
-        if (options?.signal?.aborted) throw new IrysAbortError();
+    const uploadPromises = files.map(async (file) => {
+      if (options?.signal?.aborted) throw new IrysAbortError();
 
-        const buffer = Buffer.from(file.buffer);
-        const irysTx = irys.createTransaction(buffer, {
-          tags: getGenericFileTagsWithContentType(file),
-        });
-        await irysTx.sign();
-        const {
-          status,
-          data: { id },
-        } = await irys.uploader.uploadTransaction(irysTx);
-
-        if (status >= 300) throw new AssetUploadFailedError(status);
-
-        manifestMap?.set(file.fileName, id);
-
-        return id;
+      const buffer = Buffer.from(file.buffer);
+      const irysTx = irys.createTransaction(buffer, {
+        tags: getGenericFileTagsWithContentType(file),
       });
+      await irysTx.sign();
+      processed += 0.01;
+      options?.onProgress?.(processed);
+      const {
+        status,
+        data: { id },
+      } = await irys.uploader.uploadTransaction(irysTx);
+
+      if (status >= 300) throw new AssetUploadFailedError(status);
+
+      processed += 0.99;
+      options?.onProgress?.(processed / total * 100);
+
+      manifestMap?.set(file.fileName, id);
+      return id;
+    });
+
+    const results = await Promise.all(uploadPromises);
 
     if (manifestMap) {
       const manifest = await irys.uploader.generateFolder({
@@ -178,13 +180,12 @@ export function createIrysUploader(
         tags: [
           { name: 'Type', value: 'manifest' },
           { name: 'Content-Type', value: 'application/x.irys-manifest+json' },
-          // ...(options?.manifestTags ?? []),
         ],
       });
       return [gatewayUrl(id)];
     }
 
-    return result.results.map(gatewayUrl);
+    return results.map(gatewayUrl);
   };
 
   const uploadJson = async <T>(json: T): Promise<string> => {

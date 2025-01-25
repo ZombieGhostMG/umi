@@ -1,6 +1,6 @@
 {
   "name": "@capult/umi-uploader-irys-web",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A browser-only uploader implementation relying on Irys for Umi",
   "license": "MIT",
   "sideEffects": false,
@@ -27,7 +27,6 @@
     "@irys/web-upload": "^0.0.14",
     "@irys/web-upload-solana": "^0.1.7",
     "@metaplex-foundation/umi-web3js-adapters": "^1.0.0",
-    "@supercharge/promise-pool": "^3.2.0",
     "bignumber.js": "^9.1.2",
     "buffer": "^6.0.3"
   },
