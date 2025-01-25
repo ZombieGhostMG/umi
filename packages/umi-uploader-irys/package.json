@@ -1,23 +1,19 @@
 {
   "name": "@capult/umi-uploader-irys-web",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A browser-only uploader implementation relying on Irys for Umi",
   "license": "MIT",
   "sideEffects": false,
-  "module": "dist/esm/index.mjs",
-  "main": "dist/cjs/index.cjs",
+  "module": "dist/index.mjs",
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/esm/index.mjs",
-      "require": "./dist/cjs/index.cjs"
+      "import": "./dist/index.mjs"
     }
   },
   "files": [
-    "/dist/cjs",
-    "/dist/esm",
-    "/dist/types",
+    "/dist",
     "/src"
   ],
   "scripts": {

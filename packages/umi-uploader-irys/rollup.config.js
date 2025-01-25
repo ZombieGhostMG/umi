@@ -5,12 +5,8 @@ export default createConfigs({
   pkg,
   builds: [
     {
-      dir: 'dist/esm',
+      dir: 'dist',
       format: 'es',
-    },
-    {
-      dir: 'dist/cjs',
-      format: 'cjs',
     },
   ],
 });
