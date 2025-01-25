@@ -1,9 +1,9 @@
 # umi-uploader-irys
 
-An uploader implementation relying on Irys.
+An uploader implementation relying on Irys. This is a browser-only implementation made to work with Next.js.
 
 ## Installation
 
 ```sh
-npm install @metaplex-foundation/umi-uploader-irys
+npm install @capult/umi-uploader-irys-web
 ```

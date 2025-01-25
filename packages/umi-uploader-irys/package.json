@@ -1,7 +1,7 @@
 {
-  "name": "@metaplex-foundation/umi-uploader-irys",
-  "version": "1.0.0",
-  "description": "An uploader implementation relying on Irys",
+  "name": "@capult/umi-uploader-irys-web",
+  "version": "0.1.0",
+  "description": "A browser-only uploader implementation relying on Irys for Umi",
   "license": "MIT",
   "sideEffects": false,
   "module": "dist/esm/index.mjs",
@@ -28,8 +28,6 @@
     "test": "ava"
   },
   "dependencies": {
-    "@irys/upload": "^0.0.14",
-    "@irys/upload-solana": "^0.1.7",
     "@irys/web-upload": "^0.0.14",
     "@irys/web-upload-solana": "^0.1.7",
     "@metaplex-foundation/umi-web3js-adapters": "workspace:^",
@@ -54,10 +52,10 @@
   "publishConfig": {
     "access": "public"
   },
-  "author": "Metaplex Maintainers <contact@metaplex.com>",
-  "homepage": "https://metaplex.com",
+  "author": "Capult",
+  "homepage": "https://capult.xyz",
   "repository": {
-    "url": "https://github.com/metaplex-foundation/umi.git"
+    "url": "https://github.com/capult-xyz/umi.git"
   },
   "typedoc": {
     "entryPoint": "./src/index.ts",
